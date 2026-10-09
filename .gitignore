@@ -1,0 +1,154 @@
+#  byte-compiled  optimized  dll files
+__pycache__/
+*.py[cod]
+*$py.class
+
+#  c extensions
+*.so
+
+#  distribution  packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+#  pyinstaller
+#   usually these files are written by a python script from a template
+#   before pyinstaller builds the exe so as to inject dateother infos into it
+*.manifest
+*.spec
+
+#  installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+#  unit test  coverage reports
+htmlcov/
+.tox/
+.nosetests
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+vulture_report.txt
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+#  translations
+*.mo
+*.pot
+
+#  django stuff
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+#  sphinx documentation
+docs/_build/
+
+#  pybuilder
+.pybuilder/
+target/
+
+#  jupyter notebook
+.ipynb_checkpoints
+
+#  ipython
+profile_default/
+ipython_config.py
+
+#  pyenv
+#    for a library or package you might want to ignore these files since the values are
+#    specific to the developers system but for a desktopweb application you might
+#    want to check them in
+#  python-version
+
+#  pipenv
+#    according to pypapipenv598 it is recommended to include pipfilelock in version control
+#    however in case of collaboration if delegates have different platforms it could be harmful
+#  pipfilelock
+
+#  poetry
+#    similar to pipfilelock poetrylock contains system-specific information and should be ignored
+#    if not desired
+#  poetrylock
+
+#  pdm
+#    similar to pipfilelock pdmlock contains system-specific information and should be ignored
+#    if not desired
+#  pdmlock
+
+#  pep 582 project local packages directory (used by pdm)
+__pypackages__/
+
+#  celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+#  sagemath parsed files
+*.sage.py
+
+#  environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+#  spyder project settings
+.spyderproject
+.spyder-py3
+
+#  rope project settings
+.ropeproject
+
+#  mkdocs documentation
+/site
+
+#  mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+#  pyre type checker
+.pyre/
+
+#  pytype static type analyzer
+.pytype/
+
+#  cython debug symbols
+cython_debug/
+
+#  ide  editor config files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.vs/
+*.suo
+*.user
+*.sln
+*.db
+*.opendb

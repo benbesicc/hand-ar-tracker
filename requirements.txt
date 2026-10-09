@@ -1,0 +1,7 @@
+mediapipe==0.10.14
+opencv-python==4.8.1.78
+PyYAML==6.0.1
+numpy==1.26.4
+pytest==8.1.1
+#  pytorch with cuda is installed by installbat
+# pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121

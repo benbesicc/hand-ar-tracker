@@ -1,0 +1,62 @@
+#  configuration for hand ar tracker system
+
+camera:
+  #  camera index (typically 0 for default built-in webcam 1 for external usb webcams)
+  index: 0
+  #  requested video width in pixels
+  width: 1280
+  #  requested video height in pixels
+  height: 720
+  #  requested frame rate (fps)
+  fps: 60
+  #  flip the camera 180 degrees (rotate upside-down) - useful if your camera is mounted inverted
+  rotate_180: false
+
+tracking:
+  #  maximum number of hands to detect and track simultaneously (1 or 2)
+  max_hands: 2
+  #  minimum confidence value (00 10) for hand detection to be considered successful
+  #  higher  fewer false positives but requires clearer view of the hand
+  min_detection_confidence: 0.8
+  #  minimum confidence value (00 10) for hand landmarks to be tracked successfully
+  min_tracking_confidence: 0.7
+  #  mediapipe model complexity 0  litefast 1  fullaccurate (recommended)
+  model_complexity: 1
+
+renderer:
+  #  bgr color values for skeleton connections blue green red
+  skeleton_color: [0, 255, 0]
+  #  bgr color values for landmark keypoints blue green red
+  keypoint_color: [0, 0, 255]
+  #  radius in pixels for drawing landmark keypoints
+  keypoint_radius: 6
+  #  line thickness in pixels for drawing skeleton lines
+  skeleton_thickness: 2
+  #  show rolling average fps counter on screen
+  show_fps: true
+  #  show coordinates next to fingertip landmarks
+  show_coordinates: false
+  #  show gesture name overlay near the hand
+  show_gesture_label: false
+  #  show leftright hand labels near the wrist
+  show_hand_label: false
+  #  show active compute device in top-right corner
+  show_device_label: true
+  show_ascii_overlay: true
+
+gestures:
+  #  enable or disable gesture recognition logic
+  enabled: false
+  #  maximum distance threshold between thumb tip and index tip to detect a pinch gesture
+  pinch_threshold: 0.05
+  #  minimum ratio of curled fingers to total fingers to detect a fist gesture
+  fist_threshold: 0.85
+
+#  gpu  compute device selection
+#    auto     prompt at startup to let you choose from available gpus
+#    cuda0   nvidia gpu 0 (first gpu)
+#    cuda1   nvidia gpu 1 (second gpu)
+#    cpu      force cpu only
+#  note mediapipe runs its own optimised cpu pipeline internally
+#  setting cuda0 makes the app display the gpu label and future torch inference uses that device
+device: auto
