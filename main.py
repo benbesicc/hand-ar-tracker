@@ -202,11 +202,12 @@ def process_hands(
     clap_active: bool = False,
     time_val: float = 0.0,
     reverse_mode: bool = False,
-) -> Tuple[np.ndarray, bool, bool]:
+    locked_coords: Optional[Tuple[list, list]] = None,
+) -> Tuple[np.ndarray, bool, bool, Optional[Tuple[list, list]]]:
     """process a single frame for hand detection and rendering
 
     returns
-        tuple of (renderedframe clapactive snapdetected)
+        tuple of (renderedframe clapactive snapdetected currentcoords)
     """
 
     if not hasattr(process_hands, "hands_close"):
@@ -241,6 +242,8 @@ def process_hands(
         new_snap_dists[i] = d
     process_hands.prev_snap_dists = new_snap_dists
 
+    current_coords = None
+
     #   handle  2 hands 
     if len(all_landmarks) < 2:
         clap_active = False
@@ -254,16 +257,24 @@ def process_hands(
                     label = hand_labels[i] if i < len(hand_labels) else ""
                     gesture = _get_gesture(smoothed, gesture_config)
                     frame = renderer.draw_hand(frame, smoothed, label, gesture)
-        return frame, False, snap_detected
-
-    #   2 hands detected 
-    clap_active = True
+    else:
+        #   2 hands detected 
+        clap_active = True
+        sorted_indices = sorted(range(len(smoothed_all)), key=lambda idx: smoothed_all[idx][0][0])
+        current_coords = (smoothed_all[sorted_indices[0]], smoothed_all[sorted_indices[1]])
+        
+        #  draw skeleton overlay
+        if show_gui:
+            gesture_config = config["gestures"]
+            for i, smoothed in enumerate(smoothed_all):
+                label = hand_labels[i] if i < len(hand_labels) else ""
+                gesture = _get_gesture(smoothed, gesture_config)
+                frame = renderer.draw_hand(frame, smoothed, label, gesture)
 
     #   render ribbon 
-    if clap_active:
-        sorted_indices = sorted(range(len(smoothed_all)), key=lambda idx: smoothed_all[idx][0][0])
-        coords_l, coords_r = smoothed_all[sorted_indices[0]], smoothed_all[sorted_indices[1]]
-
+    coords_to_use = locked_coords if locked_coords else current_coords
+    if coords_to_use:
+        coords_l, coords_r = coords_to_use
         if reverse_mode:
             #  reverse mode ribbon area shows real live video (just draw glowing border)
             frame = renderer.draw_real_ribbon_border(frame, coords_l, coords_r)
@@ -271,15 +282,7 @@ def process_hands(
             person_mask = tracker.segment_frame(frame)
             frame = renderer.draw_holographic_ribbon(frame, coords_l, coords_r, time_val, person_mask)
 
-    #  draw skeleton overlay
-    if show_gui:
-        gesture_config = config["gestures"]
-        for i, smoothed in enumerate(smoothed_all):
-            label = hand_labels[i] if i < len(hand_labels) else ""
-            gesture = _get_gesture(smoothed, gesture_config)
-            frame = renderer.draw_hand(frame, smoothed, label, gesture)
-
-    return frame, clap_active, snap_detected
+    return frame, clap_active, snap_detected, current_coords
 
 def _get_gesture(
     landmarks: list,
@@ -338,6 +341,8 @@ def run_main_loop(
     clap_active  = False
     reverse_mode = False   #  snap toggles this
     rotate_180   = False
+    ribbon_locked = False
+    locked_coords = None
 
     #   state 
 
@@ -366,14 +371,15 @@ def run_main_loop(
 
         #   process hands (tracking  ribbon rendering) 
         orig_frame = frame.copy()   #  keep real-camera copy for reverse-mode ascii
-        frame, clap_active, _ = process_hands(
+        frame, clap_active, _, current_coords = process_hands(
             frame, tracker, renderer, config,
             show_gui=show_skeleton, clap_active=clap_active, time_val=time.time(),
             reverse_mode=reverse_mode,
+            locked_coords=locked_coords,
         )
 
         #  reverse mode  no ribbon - full-frame ascii on black background
-        if reverse_mode and not clap_active:
+        if reverse_mode and not clap_active and not locked_coords:
             frame = ascii_processor.ascii_full_frame(orig_frame)
 
         #  gui rendering
@@ -402,6 +408,15 @@ def run_main_loop(
             if ascii_key == 32:
                 reverse_mode = not reverse_mode
                 print(f"[INFO] Space bar pressed! Reverse mode: {'ON (ribbon=real, no-ribbon=ASCII)' if reverse_mode else 'OFF'}")
+            #  backspace  lock ribbon
+            if ascii_key == 8:
+                ribbon_locked = not ribbon_locked
+                if ribbon_locked:
+                    locked_coords = current_coords
+                    print("[INFO] Ribbon locked.")
+                else:
+                    locked_coords = None
+                    print("[INFO] Ribbon unlocked.")
             #  delete  toggle all gui (hud fps flip button device label)
             if key in [3014656, 46, 127, 65535, 0x2E0000]:
                 show_gui = not show_gui

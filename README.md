@@ -22,9 +22,9 @@
 
 # overview
 
-Hand AR Tracker captures your webcam feed and overlays real-time augmented reality effects driven entirely by **hand gestures**, **spacebar presses**, and **eye winks** no buttons, no keyboard, just your body (plus the spacebar for toggling invert mode).
+Hand AR Tracker captures your webcam feed and overlays real-time augmented reality effects driven by **hand gestures** and **keyboard controls**.
 
-The core effect is a **holographic ASCII ribbon** that stretches between your two hands, rendering your silhouette as scrolling ASCII scanlines against a black background. Pressing **spacebar** inverts the entire effect, and a **double wink** locks the ribbon's position in 3D space.
+The core effect is a **holographic ASCII ribbon** that stretches between your two hands, rendering your silhouette as scrolling ASCII scanlines against a black background. Pressing **spacebar** inverts the entire effect, and **backspace** locks the ribbon's position in 3D space.
 
 ---
 
@@ -33,7 +33,7 @@ The core effect is a **holographic ASCII ribbon** that stretches between your tw
 - **Dual-hand tracking** - up to two hands simultaneously via MediaPipe Hands
 - **Holographic ASCII ribbon** - scanline particle effect renders your silhouette as ASCII art between both hands
 - **Space-to-reverse** - press the spacebar to flip the effect: real video inside ribbon, ASCII art outside
-- **Double-wink lock** - wink twice in one second to freeze the ribbon position in space
+- **Backspace lock** - press backspace to freeze the ribbon position in space
 - **Person + object segmentation** - MediaPipe Selfie Segmentation + background subtraction
 - **Live FPS counter** with rolling average
 - **Click-to-flip** camera rotation button in the HUD
@@ -122,8 +122,8 @@ The app opens your webcam. Show **both hands** to the camera to start.
 2. **Calibration** – the system automatically detects your hands and face. Wait a couple of seconds for the FPS counter to stabilize.
 3. **Enable the ribbon** – perform a **double‑pinch** (thumb and index together on each hand, then touch the pinched tips). The holographic ASCII ribbon appears between your hands.
 4. **Reverse mode** – press **spacebar**. The ribbon now shows the *real* video inside while the rest of the scene turns ASCII.
-5. **Lock the ribbon** – wink one eye twice within one second. The ribbon’s position freezes in space, allowing you to move your hands without moving the effect.
-6. **Unlock** – repeat the double‑wink to release the lock.
+5. **Lock the ribbon** – press **backspace**. The ribbon’s position freezes in space, allowing you to move your hands without moving the effect.
+6. **Unlock** – press **backspace** again to release the lock.
 7. **Toggle off** – repeat the double‑pinch gesture to turn the ribbon off.
 8. **Adjust settings** – edit `config.yaml` to change camera resolution, confidence thresholds, colors, or to enable extra gesture labels.
 9. **Exit** – press **Q** or **ESC** (hand‑skeleton toggle) to close the application.
@@ -135,6 +135,7 @@ The app opens your webcam. Show **both hands** to the camera to start.
 | Control | Action |
 |---|---|
 | **Spacebar** | Switch to reverse mode (real video inside ribbon, ASCII outside) |
+| **Backspace** | Lock / unlock the ribbon position in 3D space |
 | **Q** | Quit application |
 | **ESC** | Toggle hand skeleton visibility |
 | **Delete** | Show/hide HUD (FPS, flip button, device label) |
@@ -145,7 +146,7 @@ The app opens your webcam. Show **both hands** to the camera to start.
 
 # gesture controls
 
-Most effects are controlled entirely by **body gestures** - no keyboard required for tracking or locking the AR effects.
+Many effects are controlled entirely by **body gestures**.
 
 # double pinch touch - toggle ribbon onoff
 
@@ -159,12 +160,7 @@ Bring both hands in front of the camera, **pinch** your thumb and index finger t
 Both hands visible → pinch both → touch pinched tips together → toggle
 ```
 
-# double wink - lock  unlock ribbon position
 
-Wink **one eye** (not both - a full blink won't count) **twice within 1 second** to lock the ribbon at its current position in space. The ribbon will stay frozen even if you move your hands away.
-
-- **Double-wink while ribbon is ON:** Position locks. You can lower your hands - the ribbon stays.
-- **Double-wink while ribbon is locked:** Unlocks the ribbon so it follows your hands again.
 
 ---
 
@@ -173,6 +169,7 @@ Wink **one eye** (not both - a full blink won't count) **twice within 1 second**
 | Key | Action |
 |-----|--------|
 | **Spacebar** | Switch to reverse mode (real video inside ribbon, ASCII outside) |
+| **Backspace** | Lock / unlock the ribbon position in 3D space |
 | **Q** | Quit the application |
 | **ESC** | Toggle hand skeleton visibility (dots + lines) on/off |
 | **Delete** | Toggle the entire HUD (FPS counter, flip button, device label) on/off |
@@ -207,9 +204,9 @@ Ribbon ON:   Inside ribbon = clear real video
              (No border - clean hard edge)
 ```
 
-# locked ribbon (after double wink)
+# locked ribbon (after backspace)
 
-The ribbon polygon stays fixed in screen-space at the position captured when the wink fired. Works in both default and reversed modes.
+The ribbon polygon stays fixed in screen-space at the position captured when backspace was pressed. Works in both default and reversed modes.
 
 ---
 
@@ -274,7 +271,7 @@ device: auto   # auto  cuda0  cpu
 
 | File | Purpose |
 |------|---------|
-| `main.py` | Entry point, main loop, wink detection, spacebar toggle, mode routing |
+| `main.py` | Entry point, main loop, keyboard controls, spacebar toggle, mode routing |
 | `tracker.py` | MediaPipe Hands wrapper + FaceMesh + SelfieSegmentation |
 | `renderer.py` | All OpenCV drawing: skeleton, ribbon (ASCII + real), HUD |
 | `ascii_processor.py` | Vectorised ASCII art renderer (CLAHE + char tiles) |
