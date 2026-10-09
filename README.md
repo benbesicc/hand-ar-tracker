@@ -70,7 +70,7 @@ The core effect is a **holographic ASCII ribbon** that stretches between your tw
 
 1. **Clone the repo**
    ```bash
-   git clone https://github.com/qenev/hand-ar-tracker.git
+   git clone https://github.com/benbesicc/hand-ar-tracker.git
    cd hand-ar-tracker
    ```
 
@@ -87,7 +87,7 @@ The core effect is a **holographic ASCII ribbon** that stretches between your tw
 ### Manual installation
 
 ```bash
-git clone https://github.com/qenev/hand-ar-tracker.git
+git clone https://github.com/benbesicc/hand-ar-tracker.git
 cd hand-ar-tracker
 
 python -m venv venv
